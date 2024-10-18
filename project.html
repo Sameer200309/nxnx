@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #project-section {
+    padding: 20px;
+}
+
+.card-container {
+    display: flex;
+    justify-content: space-around; /* Space between cards */
+    flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
+    margin-bottom: 20px; /* Space between rows */
+}
+
+.card {
+    background-color: #171819; /* Card background */
+    color: white; /* Text color */
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px; /* Inner padding */
+    width: 30%; /* Card width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    margin: 10px; /* Space around cards */
+    transition: transform 0.2s; /* Smooth scaling effect on hover */
+}
+
+.card:hover {
+    transform: scale(1.05); /* Scale effect on hover */
+}
+
+.card h3 {
+    margin: 0 0 10px 0; /* Space below the title */
+}
+
+.card p {
+    margin: 0; /* No margin for paragraphs */
+}
+
+    </style>
+</head>
+
+<body>
+    <!-- Project Section in Student Dashboard -->
+<div id="project-section">
+    <h2>Projects</h2>
+    <div class="card-container">
+        <div class="card">
+            <h3>Project 1</h3>
+            <p>Description for Project 1. This project involves...</p>
+        </div>
+        <div class="card">
+            <h3>Project 2</h3>
+            <p>Description for Project 2. This project is focused on...</p>
+        </div>
+        <div class="card">
+            <h3>Project 3</h3>
+            <p>Description for Project 3. This project aims to...</p>
+        </div>
+    </div>
+    <div class="card-container">
+        <div class="card">
+            <h3>Project 4</h3>
+            <p>Description for Project 4. This project includes...</p>
+        </div>
+        <div class="card">
+            <h3>Project 5</h3>
+            <p>Description for Project 5. This project targets...</p>
+        </div>
+        <div class="card">
+            <h3>Project 6</h3>
+            <p>Description for Project 6. This project will explore...</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

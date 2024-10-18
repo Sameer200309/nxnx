@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Help Section in Student Dashboard -->
+<div id="help-section">
+    <h2>Help</h2>
+    <form id="help-form">
+        <textarea id="message" placeholder="Type your message here..." required></textarea>
+        <button type="submit">Send</button>
+    </form>
+    <div id="notification" style="color: green; display: none;">Message sent!</div>
+</div>
+
+<script>
+    const form = document.getElementById('help-form');
+    const notification = document.getElementById('notification');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const message = document.getElementById('message').value;
+
+        // Store message in localStorage
+        let messages = JSON.parse(localStorage.getItem('teacherMessages')) || [];
+        messages.push(message);
+        localStorage.setItem('teacherMessages', JSON.stringify(messages));
+
+        // Show notification
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000); // Hide notification after 3 seconds
+
+        // Clear the textarea
+        document.getElementById('message').value = '';
+    });
+</script>
+
+</body>
+</html>

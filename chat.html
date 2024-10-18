@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chatbot</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .chat-container {
+            background-color: #fff;
+            border-radius: 20px; /* Rounded corners */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* iOS-like shadow */
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Hide overflowing content */
+        }
+
+        .chat-box {
+            height: 400px;
+            padding: 10px;
+            overflow-y: auto;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .chat-message {
+            margin: 5px 0;
+        }
+
+        .user-message {
+            text-align: right;
+        }
+
+        .bot-message {
+            text-align: left;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: none;
+            border-top: 1px solid #ccc;
+            width: calc(100% - 60px);
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            border-radius: 0 20px 20px 0; /* Match chat container's border radius */
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Type your message here..." />
+        <button id="send-btn">Send</button>
+    </div>
+
+    <script>
+        document.getElementById('send-btn').addEventListener('click', sendMessage);
+
+        function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const message = userInput.value.trim();
+
+            if (message) {
+                displayMessage(message, 'user');
+                userInput.value = '';
+                getBotResponse(message);
+            }
+        }
+
+        function displayMessage(message, sender) {
+            const chatBox = document.getElementById('chat-box');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('chat-message', sender === 'user' ? 'user-message' : 'bot-message');
+            messageDiv.textContent = message;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+        }
+
+        function getBotResponse(userMessage) {
+            let botResponse = '';
+
+            // Predefined responses based on user input
+            switch (userMessage.toLowerCase()) {
+                case 'hello':
+                    botResponse = 'Hi there! How can I assist you today?';
+                    break;
+                case 'how are you?':
+                    botResponse = 'I am just a bot, but I am here to help you!';
+                    break;
+                case 'what is your name?':
+                    botResponse = 'I am a simple chatbot created to assist you.';
+                    break;
+                case 'bye':
+                case 'goodbye':
+                    botResponse = 'Goodbye! Have a great day!';
+                    break;
+                default:
+                    // Random responses if no exact match
+                    const randomResponses = [
+                        'I’m not sure I understand.',
+                        'Could you please rephrase that?',
+                        'I apologize, but I’m not able to assist with that.',
+                        'Let me check that for you.',
+                        'Interesting question! Let me think about that.'
+                    ];
+                    botResponse = randomResponses[Math.floor(Math.random() * randomResponses.length)];
+                    break;
+            }
+
+            displayMessage(botResponse, 'bot');
+        }
+    </script>
+</body>
+
+</html>

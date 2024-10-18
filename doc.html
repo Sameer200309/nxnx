@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Uploader with Magic Card</title>
+    <style>
+        /* Card Animation */
+        @property --rotate {
+            syntax: "<angle>";
+            initial-value: 132deg;
+            inherits: false;
+        }
+
+        :root {
+            --card-height: 65vh;
+            --card-width: calc(var(--card-height) / 1.5);
+        }
+
+        body {
+            min-height: 100vh;
+            background: #212534;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .card {
+            background: #191c29;
+            width: var(--card-width);
+            height: var(--card-height);
+            padding: 3px;
+            position: relative;
+            border-radius: 6px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            display: flex;
+            cursor: pointer;
+            font-family: cursive;
+        }
+
+        .card:hover:before,
+        .card:hover:after {
+            animation: none;
+            opacity: 0;
+        }
+
+        .card::before {
+            content: "";
+            width: 104%;
+            height: 102%;
+            border-radius: 8px;
+            background-image: linear-gradient(
+                var(--rotate), #5ddcff, #3c67e3 43%, #4e00c2);
+            position: absolute;
+            z-index: -1;
+            top: -1%;
+            left: -2%;
+            animation: spin 2.5s linear infinite;
+        }
+
+        .card::after {
+            position: absolute;
+            content: "";
+            top: calc(var(--card-height) / 6);
+            left: 0;
+            right: 0;
+            z-index: -1;
+            height: 100%;
+            width: 100%;
+            margin: 0 auto;
+            transform: scale(0.8);
+            filter: blur(calc(var(--card-height) / 6));
+            background-image: linear-gradient(
+                var(--rotate), #5ddcff, #3c67e3 43%, #4e00c2);
+            opacity: 1;
+            transition: opacity .5s;
+            animation: spin 2.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                --rotate: 0deg;
+            }
+
+            100% {
+                --rotate: 360deg;
+            }
+        }
+
+        /* File Uploader Styles */
+        .file-upload {
+            background-color:none;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: center;
+        }
+
+        .file-upload input[type="file"] {
+            margin: 20px 0;
+            padding: 10px;
+        }
+
+        .file-upload button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .file-upload button:hover {
+            background-color: #45a049;
+        }
+
+        #preview {
+            margin-top: 20px;
+        }
+
+        #preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        #preview div {
+            margin-top: 10px;
+        }
+
+        #removeBtn {
+            margin-top: 20px;
+            background-color: #f44336;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #removeBtn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <div class="file-upload">
+            <h1>Upload Your File</h1>
+            <form id="fileUploadForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="file" required>
+                <button type="submit">Upload</button>
+            </form>
+            <div id="uploadStatus"></div>
+        </div>
+    </div>
+
+    <!-- Preview Section to Show Uploaded File -->
+    <div id="preview"></div>
+
+    <!-- Remove File Button -->
+    <button id="removeBtn" style="display: none;">Remove File</button>
+
+    <script>
+        const form = document.getElementById('fileUploadForm');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const preview = document.getElementById('preview');
+        const removeBtn = document.getElementById('removeBtn');
+
+        window.onload = function () {
+            const savedFile = localStorage.getItem('uploadedFile');
+            const savedFileType = localStorage.getItem('uploadedFileType');
+            const savedFileName = localStorage.getItem('uploadedFileName');
+
+            if (savedFile && savedFileType) {
+                displayFile(savedFile, savedFileType, savedFileName, false);
+                removeBtn.style.display = 'block';
+            }
+        };
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                uploadStatus.textContent = 'Please select a file!';
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (event) {
+                const fileBase64 = event.target.result;
+                const fileType = file.type;
+                const fileName = file.name;
+
+                localStorage.setItem('uploadedFile', fileBase64);
+                localStorage.setItem('uploadedFileType', fileType);
+                localStorage.setItem('uploadedFileName', fileName);
+
+                displayFile(fileBase64, fileType, fileName, true);
+                removeBtn.style.display = 'block';
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        function displayFile(fileBase64, fileType, fileName, updateStorage = true) {
+            preview.innerHTML = '';
+
+            if (fileType.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = fileBase64;
+                preview.appendChild(img);
+            } else {
+                const fileInfo = document.createElement('div');
+                fileInfo.textContent = `Uploaded file: ${fileName}`;
+                preview.appendChild(fileInfo);
+            }
+
+            if (updateStorage) {
+                uploadStatus.textContent = `File "${fileName}" uploaded successfully!`;
+            }
+        }
+
+        removeBtn.addEventListener('click', function () {
+            localStorage.removeItem('uploadedFile');
+            localStorage.removeItem('uploadedFileType');
+            localStorage.removeItem('uploadedFileName');
+
+            preview.innerHTML = '';
+            uploadStatus.textContent = '';
+            removeBtn.style.display = 'none';
+        });
+    </script>
+
+</body>
+
+</html>

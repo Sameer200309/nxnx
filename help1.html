@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <!-- Help Section in Teacher Dashboard -->
+<div id="help-section">
+    <h2>Help Messages</h2>
+    <div id="messages"></div>
+    <div id="notification" style="color: red; display: none;"></div>
+</div>
+
+<script>
+    // Check for new messages on load
+    window.onload = function() {
+        const messagesDiv = document.getElementById('messages');
+        const notification = document.getElementById('notification');
+        const messages = JSON.parse(localStorage.getItem('teacherMessages')) || [];
+
+        // Check if there are new messages
+        if (messages.length > 0) {
+            notification.textContent = `${messages.length} new message(s) received!`;
+            notification.style.display = 'block';
+        }
+
+        // Display messages
+        if (messages.length === 0) {
+            messagesDiv.innerHTML = '<p>No messages yet.</p>';
+        } else {
+            messages.forEach((message, index) => {
+                const messageElement = document.createElement('div');
+                messageElement.textContent = `Message ${index + 1}: ${message}`;
+                messagesDiv.appendChild(messageElement);
+            });
+        }
+    };
+</script>
+
+</body>
+</html>
